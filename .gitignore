@@ -1,0 +1,30 @@
+.git
+.env
+.DS_Store
+airflow_settings.yaml
+__pycache__/
+astro
+.venv
+airflow-webserver.pid
+webserver_config.py
+airflow.cfg
+airflow.db
+tests
+
+# Ignore Terraform directories and files
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+terraform.tfvars
+*.tfstate*
+crash.log
+*.tfplan
+
+# Some random notes
+unity_catalog.txt
+MY_NOTES.txt
+MY_NOTES2.txt
+maintf.txt
+./coffee_shop_data.csv
+include/coffee_shop_data.csv

@@ -1,0 +1,8 @@
+project:
+    name: adb-project
+
+webserver:
+    port: 8087
+    
+postgres:
+    port: 5437
