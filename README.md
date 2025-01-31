@@ -304,6 +304,9 @@ The ETL pipeline efficiently processes batch data using Databricks Auto Loader w
 4. **Enhance Support for Change Data Capture (CDC)**: 
     - Upgrade the ETL pipeline to handle incremental changes from source systems using CDC techniques, ensuring efficient updates and near real-time data synchronization
 
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
 ---
 
 Feel free to explore the code and customize it as needed. Contributions and feedback are always welcome!
