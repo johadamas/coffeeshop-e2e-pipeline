@@ -1,9 +1,18 @@
 # Databricks ETL Pipeline with Autoloader
 
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Key Features](#key-features)
+3. [Prerequisites](#prerequisites)
+4. [Quick Start](#quick-start)
+5. [Get Started](#get-started)
+6. [ETL Pipeline Test](#etl-pipeline-test)
+7. [Power BI Dashboard](#power-bi-dashboard)
+7. [Project Summary](#project-summary)
+8. [Future Enhancements](#future-enhancements)
+
 ## Project Overview
 This project demonstrates an end-to-end ETL (Extract, Transform, Load) pipeline using Databricks, seamlessly integrating multiple Azure services and modern data engineering tools.
-
-## Architecture
 
 ![Pipeline Flow](/images/_project_architecture.png "Project Architecture")
 
@@ -27,17 +36,83 @@ The pipeline is designed to process, transform, and analyze fake Coffee Shop Sal
 1. **Power BI Integration**:
     - Gold-layer Delta tables are visualized in Power BI using a JDBC/ODBC endpoint, enabling real-time and interactive dashboards
 
+## Prerequisites
+1. **Azure Subscriptions**
+    - A valid Azure subscription is required to provision and manage cloud resources, including Azure Data Lake Storage (ADLS), Databricks, Key Vault, and other services used in this pipeline
 
+2. **Astro CLI v1.30.0**
+    - Astro CLI is required to run Apache Airflow within a Docker container, simplifying orchestration and dependency management
+
+3. **Terraform v1.9.8**
+    - Terraform is used for Infrastructure as Code (IaC) to provision Azure resources programmatically. The specified version ensures compatibility with the project setup
+
+    - Installed inside the Docker container for deployment automation
+
+4. **Azure CLI v2.68.0**
+    - The Azure CLI is used to authenticate and interact with Azure resources. It is installed inside the Docker container to facilitate Terraform deployments and resource management
+
+5. **Docker Desktop**
+    - Docker is required to containerize and run Airflow, ensuring a consistent runtime environment
+
+6. **Power BI Desktop**
+    - Power BI is used to visualize and analyze data from the Gold layer stored in Delta tables within Databricks
+
+    - The JDBC/ODBC connector is required to connect Power BI to Databricks
+
+## Quick Start
+1. **Clone this repository**:
+    - Bash command:
+
+        ```bash
+        git clone https://github.com/johadamas/coffeeshop-e2e-pipeline.git
+        ```
+
+2. **Set up the environment**:
+    - Ensure you have Docker Desktop installed and running
+    - Install the Astro CLI (v1.30.0) by following the [official installation guide](https://www.astronomer.io/docs/astro/cli/install-cli/?tab=windows#install-the-astro-cli)
+
+3. **Start the Airflow environment**:
+    - Run the following command to start the Airflow environment using Docker:
+
+        ```bash
+        astro dev start
+        ```
+
+    - Access the Airflow UI at http://localhost:8087 and log in with the default credentials (admin for both username and password)
+
+4. **Run Airflow DAG**:
+    - Once you get into the Airflow UI, you will see two DAG's:
+        - `project_setup_pipeline`:
+            This DAG provisions Azure resources using Terraform, generates fake Coffee Shop Sales data, and uploads the data to the Landing Container in Azure Data Lake Storage (ADLS)
+
+        - `generate_and_load_data`:
+            This DAG is used for generating and loading additional data into the pipeline (for testing purposes)
+
+    - Trigger the `project_setup_pipeline` DAG to set up the infrastructure and load initial data. The task dependencies are as follows
+
+        ```plaintext
+        create_azure_resource >> generate_coffee_shop_data >> upload_to_landing_container
+        ```
+
+5. **Run Databricks ETL Pipeline**:
+    - Once the `project_setup_pipeline` DAG completes, navigate to the **Azure Databricks** resource and select **Workflows**
+
+    - You will see the **Coffee Shop ETL Pipeline** with the following notebook dependencies
+
+        ```plaintext
+        mount_storage >> ingest_bronze >> transform_silver >> transform_gold >> load_delta_tables
+        ```
+
+    - Manually trigger the **Coffee Shop ETL Pipeline** to process the data through the Bronze, Silver, and Gold layers in Databricks
+
+6. **Visualize the data**:
+    - Open Power BI Desktop and connect to the Databricks Gold layer using the JDBC/ODBC endpoint
+
+    - Create interactive dashboards to visualize the processed data
+
+For detailed instructions, refer to the **Get Started** section
 
 ## Get Started
-
-### Prerequisites
-- Azure Subscription
-- Astro CLI v1.30.0
-- Docker Desktop
-- Power BI Desktop
-
-### Project Flows:
 
 1. **Run Airflow DAGs**:  
    The Airflow contains two DAGs:
@@ -157,27 +232,63 @@ The pipeline is designed to process, transform, and analyze fake Coffee Shop Sal
 
         ![](/images/16.pbi_schema.png "")
 
-16. **Power BI Dashboard**:  
-    - The Power BI dashboard below includes interactive features such as `tooltips` and `bookmarks` for seamless filter navigation
 
-        ![](/images/20.pbi_dashboard.gif "")
-  
-        *Note:
-        The dashboards interactive features is added after the final pipeline test below.*
-
-17. **Databricks ETL Pipeline test**:  
-   Generating New Data:
+## ETL Pipeline test
+1. **Generating New Data**:
     - Using the `generate_and_load_new_data` DAG, new fake coffee shop sales data is generated to simulate incoming data in a batch processing scenario
 
         ![](/images/17.generate_new_data.gif "")
 
-    Testing the Databricks Pipeline:
+2. **Testing the Databricks Pipeline**:
     - After the new data is successfully loaded into the `landing_container` and the ETL pipeline is triggered manually, the `pipelineTest` notebook can be used to verify the updated data. 
 
         ![](/images/18.adb_pipeline_test.gif "")
 
         *Note:
         The increase in the number of distinct `transaction_id` values from `1000` to `2000` confirms that the Auto Loader is functioning as expected*
+
+## Power BI Dashboard
+The Power BI Dashboard provides an interactive and visually appealing way to analyze the processed data from the Databricks Gold layer. It connects to Databricks using the JDBC/ODBC endpoint and is refreshed periodically to reflect the latest data
+
+### **Visuals**:
+The dashboard consists of two pages
+- **Sales Overview**: Provides a high-level view of sales and transactions
+
+- **Customer Insights**: Focuses on customer behavior and preferences
+
+### **Features:**
+- `Interactive Tooltips`: Hover over visualizations to see detailed information
+
+- `Bookmarks:` Use bookmarks to navigate between different views and filters seamlessly
+
+    - Here’s a preview of the dashboard in action:
+
+        ![](/images/20.pbi_dashboard.gif "")
+
+
+### **Insights**:
+Using the dashboard, we can gain insight such as:
+- `Sales by Store Location`: Shows the total sales per store location, helping identify top-performing stores
+
+- `Transaction by Product Category`: Displays the total transactions per product category, highlighting popular products
+
+- `Extracted Date` and `Extracted Time`: Indicates the last time the dashboard was updated with new processed data
+
+- `Top 10 Products by Transactions`: Lists the top 10 products based on the number of transactions, providing insights into customer preferences
+
+- `Sales and Transactions by Daypart`: Shows the time of day when the most sales and transactions occur, helping optimize staffing and inventory
+
+## Project Summary
+The ETL pipeline efficiently processes batch data using Databricks Auto Loader within the Medallion Architecture. Terraform automates infrastructure provisioning, while Airflow orchestrates workflows
+
+**Key achievements**
+- `Seamless Data Ingestion` into the Bronze layer
+
+- `Structured Transformations` through Silver and Gold layers
+
+- `Power BI Integration` for real-time insights
+
+- `Reliable Workflow Automation` with Airflow
 
 ## Future Enhancements
 
@@ -195,5 +306,4 @@ The pipeline is designed to process, transform, and analyze fake Coffee Shop Sal
 
 ---
 
-Feel free to explore the code and customize it as needed. Contributions and feedback are always welcome!  
-           
+Feel free to explore the code and customize it as needed. Contributions and feedback are always welcome!
