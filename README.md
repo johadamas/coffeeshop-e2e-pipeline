@@ -8,7 +8,7 @@
 5. [Get Started](#get-started)
 6. [ETL Pipeline Test](#etl-pipeline-test)
 7. [Power BI Dashboard](#power-bi-dashboard)
-7. [Project Summary](#project-summary)
+7. [Conclusion](#conclusion)
 8. [Future Enhancements](#future-enhancements)
 
 ## Project Overview
@@ -248,37 +248,29 @@ For detailed instructions, refer to the **Get Started** section
         The increase in the number of distinct `transaction_id` values from `1000` to `2000` confirms that the Auto Loader is functioning as expected*
 
 ## Power BI Dashboard
-The Power BI Dashboard provides an interactive and visually appealing way to analyze the processed data from the Databricks Gold layer. It connects to Databricks using the JDBC/ODBC endpoint and is refreshed periodically to reflect the latest data
+1. **Dashboard Overview**
 
-### **Visuals**:
-The dashboard consists of two pages
-- **Sales Overview**: Provides a high-level view of sales and transactions
+    The Power BI Dashboard provides an interactive and visually appealing way to analyze the processed data from the Databricks Gold layer. It connects to Databricks using the JDBC/ODBC endpoint and is refreshed periodically to reflect the latest data
 
-- **Customer Insights**: Focuses on customer behavior and preferences
-
-### **Features:**
-- `Interactive Tooltips`: Hover over visualizations to see detailed information
-
-- `Bookmarks:` Use bookmarks to navigate between different views and filters seamlessly
-
-    - Here’s a preview of the dashboard in action:
+      - **Here’s a preview of the dashboard in action**:
 
         ![](/images/20.pbi_dashboard.gif "")
 
 
-### **Insights**:
-Using the dashboard, we can gain insight such as:
-- `Sales by Store Location`: Shows the total sales per store location, helping identify top-performing stores
+3.  **Insights**:
 
-- `Transaction by Product Category`: Displays the total transactions per product category, highlighting popular products
+    Using the dashboard, we can gain insight such as:
+    - `Sales by Store Location`: Shows the total sales per store location, helping identify top-performing stores
 
-- `Extracted Date` and `Extracted Time`: Indicates the last time the dashboard was updated with new processed data
+    - `Transaction by Product Category`: Displays the total transactions per product category, highlighting popular products
 
-- `Top 10 Products by Transactions`: Lists the top 10 products based on the number of transactions, providing insights into customer preferences
+    - `Extracted Date` and `Extracted Time`: Indicates the last time the dashboard was updated with new processed data
 
-- `Sales and Transactions by Daypart`: Shows the time of day when the most sales and transactions occur, helping optimize staffing and inventory
+    - `Top 10 Products by Transactions`: Lists the top 10 products based on the number of transactions, providing insights into customer preferences
 
-## Project Summary
+    - `Sales and Transactions by Daypart`: Shows the time of day when the most sales and transactions occur, helping optimize staffing and inventory
+
+## Conclusion
 The ETL pipeline efficiently processes batch data using Databricks Auto Loader within the Medallion Architecture. Terraform automates infrastructure provisioning, while Airflow orchestrates workflows
 
 **Key achievements**
@@ -292,17 +284,17 @@ The ETL pipeline efficiently processes batch data using Databricks Auto Loader w
 
 ## Future Enhancements
 
-1. **Implement Monitoring and Alerting**:  
-    - Integrate monitoring tools and automated alerting mechanisms to track pipeline performance, detect anomalies, and ensure timely issue resolution
+1. **Monitoring and Alerting**:  
+    - Add monitoring tools and automated alerts to track pipeline performance and detect anomalies
 
-2. **Integrate Unity Catalog and Delta Live Tables**: 
-    - Leverage Unity Catalog for centralized governance, fine-grained data access control, and collaboration. Use Delta Live Tables for declarative ETL pipelines, improving pipeline automation and data quality management.
+2. **Unity Catalog and Delta Live Tables**: 
+    - Use Unity Catalog for data governance and Delta Live Tables for automated ETL pipelines.
 
-3. **Strengthen Data Quality Checks**:
-    - Introduce more comprehensive data quality validation, including null checks, schema enforcement, and threshold-based anomaly detection, to ensure clean and accurate data at all stages
+3. **Data Quality Checks**:
+    - Enhance data quality validation with null checks, schema enforcement, and anomaly detection
 
-4. **Enhance Support for Change Data Capture (CDC)**: 
-    - Upgrade the ETL pipeline to handle incremental changes from source systems using CDC techniques, ensuring efficient updates and near real-time data synchronization
+4. **Change Data Capture (CDC)**: 
+    - Upgrade the ETL pipeline to handle incremental changes using CDC for efficient updates and near real-time data synchronization
 
 ---
 
